@@ -21,7 +21,7 @@ if ($search) {
 		$url .= '&attribute=shortFilmTerm';
 		$entity = 'shortFilm';
 	}
-	if ($_GET['entity'] == 'id') {
+	if ($_GET['entity'] == 'id' || $_GET['entity'] == 'idAlbum') {
 		$url = 'https://itunes.apple.com/lookup?id='.urlencode($search).'&country='.$_GET['country'];
 	}
 	
@@ -47,7 +47,7 @@ if ($search) {
 		$data = array();
 		$data['url'] = str_replace('100x100', '600x600', $result->artworkUrl100);
 
-		$hires = str_replace('.100x100-75', '', $result->artworkUrl100);
+		$hires = str_replace('100x100bb', '100000x100000-999', $result->artworkUrl100);
 		$parts = parse_url($hires);
 		$hires = 'http://is5.mzstatic.com'.$parts['path'];
 
@@ -77,10 +77,7 @@ if ($search) {
 				$warning = '(probably won\'t work)';
 				break;
 			case 'album':
-				$hires = str_replace('.100x100-75', '.1500x1500-75', $result->artworkUrl100);
-				$parts = parse_url($hires);
-				$hires = 'http://is5.mzstatic.com'.$parts['path'];
-				$data['hires'] = $hires;
+			case 'idAlbum':
 				$data['title'] = $result->collectionName.' (by '.$result->artistName.')';
 				//$warning = '(probably won\'t work)';
 				break;
@@ -92,7 +89,7 @@ if ($search) {
 				$data['title'] = $result->collectionName.' (by '.$result->artistName.')';
 				break;
 			case 'software':
-				$data['url'] = $result->artworkUrl512;
+				$data['url'] = str_replace('512x512bb', '1024x1024bb', $result->artworkUrl512);
 				$data['appstore'] = $result->trackViewUrl;
 				$data['title'] = $result->trackName;
 				$width = 512;
